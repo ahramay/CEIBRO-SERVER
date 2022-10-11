@@ -1,0 +1,23 @@
+{
+    "login.btn": "Login dyn3",
+    "input.Email": "Email",
+    "input.Password": "Password",
+    "input.RememberMe": "Remeber me",
+    "input.Login": "Login",
+    "input.ForgetPassword": "Forgot Password",
+    "input.otp": "Please Enter OTP",
+    "input.verify": "Verify",
+    "input.send": "Send",
+    "input.verifyEmail": "Resend OTP",
+
+
+
+
+
+
+
+    "Dashboard": "Dashboard",
+    "Chat": "Chat",
+    "Tasks": "Tasks",
+    "Projects": "Projects"
+ }

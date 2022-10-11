@@ -1,0 +1,347 @@
+:root {
+  --primary: rgb(0, 118, 200);
+  --accent: rgb(201, 226, 217);
+  --light-accent: rgb(213, 235, 227, 0.4);
+  --black: rgb(0, 0, 0);
+  --dark-yellow: #f1b740;
+  --medium-grey: #bdc3c7;
+  --light-black: rgb(125, 126, 128);
+  --btn-red: #f94340;
+  --aqua-green: #55bcb3;
+  --purple-grey: #DBDBE5;
+  --white: white;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.MuiTableCell-body {
+  color: black !important;
+}
+
+.all-badge .MuiBadge-colorPrimary {
+  background: white;
+  color: var(--black) !important;
+}
+
+.ongoing-badge .MuiBadge-colorPrimary {
+  background: var(--dark-yellow);
+  color: white;
+}
+
+.submitted-badge .MuiBadge-colorPrimary {
+  background: var(--aqua-green);
+  color: white;
+}
+
+.completed-badge .MuiBadge-colorPrimary {
+  background: var(--medium-grey);
+  color: black;
+}
+
+.draft-badge .MuiBadge-colorPrimary {
+  background: var(--light-black);
+  color: white;
+}
+
+.rejected-badge .MuiBadge-colorPrimary {
+  background: var(--btn-red);
+  color: white;
+}
+
+.lower-padding th,
+.lower-padding td {
+  padding: 10px !important;
+}
+
+.customized-title h2 {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.emptyBorder {
+  border: none;
+}
+
+.emptyBorder:focus {
+  border: none;
+}
+
+.emptyBorder:hover {
+  border: none;
+}
+
+.emptyBorder:active {
+  border: none;
+}
+
+.emptyBorder:focus-visible {
+  border: none;
+  outline: none;
+}
+
+.custom-btn {
+  display: inline-block;
+  font-weight: 400;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  border: 1px solid transparent;
+  padding: 0.375rem 0.75rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  border-radius: 0.25rem;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
+    border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.css-1wa3eu0-placeholder {
+  font-size: 12px !important;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* custom scrollbar */
+.MuiDialog-paperWidthSm::-webkit-scrollbar,
+.custom-scrollbar::-webkit-scrollbar {
+  width: 20px;
+}
+
+.MuiButton-label {
+  font-weight: bold !important;
+}
+
+.MuiDialog-paperWidthSm::-webkit-scrollbar-track,
+.custom-scrollbar::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+.MuiDialog-paperWidthSm::-webkit-scrollbar-thumb,
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #d6dee1;
+  border-radius: 20px;
+  border: 6px solid transparent;
+  background-clip: content-box;
+}
+
+.MuiDialog-paperWidthSm::-webkit-scrollbar-thumb:hover,
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: #a8bbbf;
+}
+
+.accordion {
+  color: #444;
+  cursor: pointer;
+  padding: 18px;
+  width: 100%;
+  border: none;
+  text-align: left;
+  outline: none;
+  font-size: 15px;
+  transition: 0.4s;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #f5f7f8;
+  border-bottom: 1px solid #ecf0f1;
+  cursor: pointer;
+}
+
+.accordion:hover {
+  background-color: rgb(236, 240, 241);
+}
+
+.accordion .MuiBadge-root {
+  font-size: 12px;
+}
+
+.accordion .accordion-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: rgba(0, 118, 200, 1);
+  margin-left: 10px;
+}
+
+.accordion .accordion-title.active {
+  color: var(--black)
+}
+
+.active,
+.accordion:hover {
+}
+
+.panel {
+  padding: 0 18px;
+  display: none;
+  background-color: white;
+  overflow: hidden;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:focus {
+  transition: background-color 600000s 0s, color 600000s 0s;
+}
+
+input[type="file"] {
+  display: none;
+}
+
+/* input {
+  border-color: #DBDBE5;
+} */
+
+.align-center {
+  display: flex;
+  align-items: center;
+}
+
+.file-preview svg {
+  width: 50px;
+  height: 50px;
+}
+
+.file-preview img {
+  width: 36px;
+  height: 36px;
+}
+
+.chat-room-media .MuiBadge-anchorOriginTopRightRectangle {
+  right: -5;
+}
+
+.create-question-row input::-webkit-input-placeholder {
+  font-size: 12px;
+  line-height: 3;
+}
+
+input, textarea {
+  background-color: white !important;
+}
+input::-webkit-input-placeholder,
+texarea::-webkit-input-placeholder{
+  font-size: 14px !important;
+  color: black !important;
+  font-weight: 500 !important;
+}
+
+.black-input, .black-input input {
+  color: var(--black) !important;
+}
+
+.css-6j8wv5-Input input {
+  color: black !important
+}
+
+.options-text .MuiFormControlLabel-label {
+  font-weight: 500 !important;
+  font-size: 14px;
+  text-align: justify;
+}
+
+.MuiFormControlLabel-label.Mui-disabled {
+  color: black !important;
+}
+
+.error-text {
+  color: var(--btn-red) !important;
+  font-size: 12px !important;
+  font-weight: 500;
+}
+
+input,
+input::-webkit-input-placeholder,
+textarea, 
+textarea::-webkit-input-placeholder{
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    font-family: Inter !important;
+    color: #AEADBD !important;
+}
+
+.css-1pndypt-Input input,
+.css-1pndypt-Input input::-webkit-input-placeholder {
+  color: black !important;
+}
+
+
+
+button:disabled,
+button[disabled]{
+  border: 1px solid #999999;
+  background-color: #ADB5BD;
+  color: white;
+}
+
+.MuiBadge-badge {
+  font-size: 10px !important;
+  font-weight: bold !important;
+  color: white !important;
+  padding: 6px !important;
+  height: 16px !important;
+  min-width: 14px !important;
+}
+
+.MuiInputBase-input {
+  background-color: var(--white) !important;
+  font-weight: 500 !important;
+  font-size: 14px !important;
+  color:rgb(0, 0, 0) !important;
+}
+
+.width-16 {
+  width: auto;
+  height: 16px;
+}
+
+.w-16 {
+  width: 16px
+}
+
+.Component-switchBase-131.Component-checked-134 {
+  transform: translateX(8px) !important;
+}
+.Component-thumb-133 {
+  margin-left: 1px !important;
+}
+
+.MuiFormControlLabel-root {
+  margin: 0px !important;
+}
+
+.MuiTypography-root.MuiFormControlLabel-label.MuiTypography-body1 {
+  font-size: 14px;
+  font-weight: 500; 
+}
+
+.css-qc6sy-singleValue {
+  margin-left: 10px !important;
+}
+
+.react-datepicker-wrapper input {
+  width: 95%;
+}
+
+.pg-viewer-wrapper {
+  overflow-y: auto !important;
+}
+
+.pin-message-chip {
+  cursor: pointer;
+}
+
+.pin-message-chip:hover {
+  background-color: var(--purple-grey) !important;
+}

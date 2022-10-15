@@ -10,16 +10,17 @@ const router = express.Router();
 
 router
   .route('/rooms')
-  .post(auth('createChatRoom'), validate(chatValidation.createChatRoom), chatController.createChat)
-  .get(auth('getChatRooms'), chatController.getChats);
+  .post(auth('createChatRoom'), validate(chatValidation.createChatRoom), chatController.createChat);
+
+router.route('/rooms/getchat').post(auth('getChatRooms'), chatController.getChats);
 
 router
   .route('/room/single/:userId')
   .post(auth('createChatRoom'), validate(chatValidation.createOneToOneChat), chatController.createOneToOneChat);
 
-router.route('/room/messages/:roomId').get(auth('getChatRooms'), chatController.getConversationByRoomId);
+router.route('/room/messages/:roomId').post(auth('getChatRooms'), chatController.getConversationByRoomId);
 
-router.route('/unread/count').get(auth('getChatRooms'), chatController.getUnreadMessagesCount);
+router.route('/unread/count').post(auth('getChatRooms'), chatController.getUnreadMessagesCount);
 
 router.route('/room/read/:roomId').put(auth('getChatRooms'), chatController.setRoomMessagesRead);
 router.route('/room/unread/:roomId').put(auth('getChatRooms'), chatController.setRoomMessagesUnRead);
@@ -43,8 +44,11 @@ router.route('/pinned/title/:roomId').put(auth('manageProject'), chatController.
 
 router
   .route('/message/favourite/:messageId')
-  .post(auth('getChatRooms'), chatController.addMessageToFavourite)
-  .get(auth('getChatRooms'), chatController.getPinnedMessages);
+  .post(auth('getChatRooms'), chatController.addMessageToFavourite);
+
+router.route('/message/favourites/:messageId').post(auth('getChatRooms'), chatController.getPinnedMessages);
+
+router.route('/media/:roomId').get(auth('getChatRooms'), chatController.getPinnedMessages);
 
 router.route('/media/:roomId').get(auth('getChatRooms'), chatController.getChatRoomMedia);
 
@@ -172,7 +176,9 @@ module.exports = router;
  *         $ref: '#/components/responses/Forbidden'
  *       "404":
  *         $ref: '#/components/responses/NotFound'
- *   get:
+ * @swagger
+ * /chat/rooms/getchat:
+ *   post:
  *     summary: Get a users all chat rooms
  *     tags: [Chat]
  *     security:
@@ -314,7 +320,7 @@ module.exports = router;
 /**
  * @swagger
  * /chat/room/messages/{roomId}:
- *   get:
+ *   post:
  *     summary: get chat room messages
  *     tags: [Chat]
  *     security:
@@ -841,7 +847,9 @@ module.exports = router;
  *         $ref: '#/components/responses/Forbidden'
  *       "404":
  *         $ref: '#/components/responses/NotFound'
- *   get:
+ * @swagger
+ * /chat/message/favourites/{messageId}:
+ *   post:
  *     summary: get favourite messages of a room
  *     tags: [Chat]
  *     security:
@@ -936,7 +944,7 @@ module.exports = router;
 /**
  * @swagger
  * /chat/unread/count:
- *   get:
+ *   post:
  *     summary: get unread messages count
  *     tags: [Chat]
  *     security:

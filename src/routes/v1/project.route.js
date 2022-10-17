@@ -42,7 +42,7 @@ router
 
 router.route('/count/status').get(auth('manageProject'), projectController.getProjectsStatusWithCount);
 
-router.route('/all').get(auth('manageProject'), projectController.getAllProjects);
+router.route('/getallprojects').post(auth('manageProject'), projectController.getAllProjects);
 
 router
   .route('/role/detail/:roleId')

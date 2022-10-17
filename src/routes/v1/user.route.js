@@ -8,9 +8,9 @@ const router = express.Router();
 
 router
   .route('/profile')
-  .post(auth('manageProfile'), userController.getMyProfile)
   .post(auth('manageProfile'), validate(userValidation.updateProfile), userController.updateMyProfile);
-
+router 
+.route('/getprofile').post(auth('manageProfile'), userController.getMyProfile)
 router
   .route('/profile/pic')
   .patch(auth('manageProfile'), multerUpload.single('profilePic'), userController.updateUserProfilePic);

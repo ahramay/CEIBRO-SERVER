@@ -2,7 +2,7 @@ const express = require('express');
 const authRoute = require('./auth.route');
 const userRoute = require('./user.route');
 const chatRoute = require('./chat.route');
-const docsRoute = require('./docs.route');
+//const docsRoute = require('./docs.route');
 const projectRoute = require('./project.route');
 const taskRoute = require('./task.route');
 
@@ -31,10 +31,10 @@ const defaultRoutes = [
     path: '/task',
     route: taskRoute,
   },
-  {
-    path: '/docs',
-    route: docsRoute,
-  },
+  // {
+  //   path: '/docs',
+  //   route: docsRoute,
+  // },
 
 ];
 

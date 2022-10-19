@@ -7,6 +7,7 @@ const logger = require('./config/logger');
 const { webSocket } = require('./controllers');
 
 // let server;
+
 mongoose
   .connect(config.mongoose.url, config.mongoose.options)
   .then(() => {
@@ -44,7 +45,7 @@ mongoose
     // });
   })
   .catch((err) => {
-    console.log('error connnecting mongo');
+    console.log('error connnecting to mongo-db', err);
   });
 // let server
 const exitHandler = () => {

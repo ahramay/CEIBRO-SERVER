@@ -6,7 +6,7 @@ const ApiError = require('../utils/ApiError');
 const ObjectId = require('mongoose').Types.ObjectId;
 const { REFRESH_CHAT } = require('../config/chat.constants');
 const { invitesStatus } = require('../config/user.config');
-const { filterArray } = require('../helpers/project.helper');
+const { filterArray } = require('../helpers/project.helper');;
 
 /**
  * Create a user
@@ -50,6 +50,14 @@ const getChatByName = async (name) => {
 
 const isChatExist = async (chatId) => {
   const chatExist = await Chat.findOne({ _id: chatId });
+  if (!chatExist) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Chat not found');
+  }
+  return chatExist;
+};
+
+const getChatQuestioniarId= async (questioniarId) => {
+  const chatExist = await Message.findOne({ _id: questioniarId });
   if (!chatExist) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Chat not found');
   }
@@ -548,9 +556,34 @@ const addOrRemoveChatMember = async (roomId, userId, temporary = false) => {
   }
 };
 
+const leaveChat = async (roomId, userId, temporary = false) => {
+  const chat = await getChatRoomByRoomId(roomId);
+  if (!chat) {
+    throw new ApiError(400, 'Chat room not found');
+  }
+
+  const member = await userService.getUserById(userId);
+  if (!member) {
+    throw new ApiError(400, 'User not found');
+  }
+  const index = chat?.members?.findIndex((member) => String(member) === String(userId));
+  if (index < 0) {
+    await Chat.updateOne({ _id: roomId }, { $pull: { members: userId }, $addToSet: { removedMembers: userId } });
+    if (member.socketId) {
+      global.io.sockets.to(member.socketId).emit(REFRESH_CHAT.value);
+    }
+    return false;
+  } else {
+    throw new ApiError(400, 'User not found');
+  }
+};
+
 const removeUserCompletely = async function (roomId, userId) {
   return Chat.updateOne({ _id: roomId }, { $pull: { removedMembers: userId } });
 };
+
+
+
 
 module.exports = {
   createChat,
@@ -581,5 +614,7 @@ module.exports = {
   isChatExist,
   setLastMessagesUnRead,
   getChatByName,
+  getChatQuestioniarId,
   removeUserCompletely,
+  leaveChat
 };

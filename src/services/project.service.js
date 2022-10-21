@@ -224,6 +224,7 @@ const createProjectRole = async (name, admin, roles = [], member, timeProfile, p
 const createProfileWork = async (
   profileId,
   name,
+  location,
   roles,
   time,
   timeRequired,
@@ -235,6 +236,7 @@ const createProfileWork = async (
   photoRequired
 ) => {
   await isTimeProfileExist(profileId);
+  await isLocationExist(location);
   const work = await getWorkByProfileAndName(name, profileId);
   if (work) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Work already exist');
@@ -245,6 +247,7 @@ const createProfileWork = async (
   const newWork = new Work({
     profile: profileId,
     name,
+    location,
     roles,
     time,
     timeRequired,
@@ -329,6 +332,19 @@ const isLocationExist = async (locationId) => {
   return location;
 };
 
+const removeLocationChilds = async (locationId) => {
+  return Location.deleteMany({
+    externalChilds: locationId,
+    internalChilds: locationId
+  })
+};
+
+const removeLocationWorks = async (locationId) => {
+  return Work.deleteMany({
+    location: locationId
+  })
+};
+
 const addToExternalCild = async (parentId, locationId) => {
   console.log('parentId: ', parentId);
   return Location.updateMany({
@@ -363,18 +379,17 @@ const addParentIdsToLocation = async (locationId, parentId) => {
 };
 
 const parentPopulate = {
-  path: 'parent', select: 'name'
+  path: 'parents', select: 'name'
 }
 
 const getAllLocationsByTimeProfile = async (timeProfileId) => {
-  Location.updateMany({}, { timeProfile: timeProfileId })
   return Location.find({
     isInternal: false,
     depth: 1,
-    // timeProfile: timeProfileId,
+    timeProfile: timeProfileId,
   }, { name: 1, externalChilds: 1, isInternal: 1, parents: 1 }).populate([
     {
-      path: 'externalChilds', select: "name externalChilds",
+      path: 'externalChilds', select: "name externalChilds parents",
       populate: [
         {
           path: 'externalChilds', select: "name"
@@ -389,7 +404,7 @@ const getAllLocationsByTimeProfile = async (timeProfileId) => {
 const getAllInternalLocations = async (locationId, timeProfileId) => {
   return Location.find({
     isInternal: true,
-    // parent: locationId,
+    parent: locationId,
     timeProfile: timeProfileId,
     depth: 1,
   }, { name: 1, internalChilds: 1, parents: 1 }).populate([
@@ -404,6 +419,13 @@ const getAllInternalLocations = async (locationId, timeProfileId) => {
     },
     parentPopulate
   ])
+};
+
+const getAllWorksByLocation = async (timeProfileId, locationId) => {
+  return Work.find({
+    location: locationId,
+    profile: timeProfileId
+  }, { name: 1 });
 };
 
 const editProjectRole = async (roleId, name, admin, roles = [], member, timeProfile) => {
@@ -888,5 +910,8 @@ module.exports = {
   addToInternalCild,
   addParentIdsToLocation,
   getAllLocationsByTimeProfile,
-  getAllInternalLocations
+  getAllInternalLocations,
+  getAllWorksByLocation,
+  removeLocationChilds,
+  removeLocationWorks
 };

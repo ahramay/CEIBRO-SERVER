@@ -5,7 +5,7 @@ const { getFileTypeByName } = require('../helpers/chat.helper');
 const folders = {
   USER_FOLDER: 'users',
   CHAT_FOLDER: 'chat_media',
-  PROJECT_FOLDER: 'projects'
+  PROJECT_FOLDER: 'projects',
 };
 
 const s3bucket = new AWS.S3(awsConfig);
@@ -21,6 +21,7 @@ const uploadFile = (file, folder = folders.CHAT_FOLDER) => {
       };
       s3bucket.upload(params, (error, data) => {
         if (error) {
+          console.log("one", error)
           reject(error);
         }
         resolve({
@@ -30,6 +31,7 @@ const uploadFile = (file, folder = folders.CHAT_FOLDER) => {
         });
       });
     } catch (e) {
+      console.log("two", e)
       reject(e);
     }
   });

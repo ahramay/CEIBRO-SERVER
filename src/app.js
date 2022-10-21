@@ -11,12 +11,11 @@ const morgan = require('./config/morgan');
 const realMorgan = require('morgan')
 const { jwtStrategy } = require('./config/passport');
 const { authLimiter } = require('./middlewares/rateLimiter');
-
-const routesv1 = require('./routes/v1');
-const routesv2 = require('./routes/v2');
+const routes = require('./routes/v1');
 const { errorConverter, errorHandler } = require('./middlewares/error');
 const ApiError = require('./utils/ApiError');
-//const path = require('path');
+const path = require('path');
+
 const app = express();
 
 // Have Node serve the files for our built React app
@@ -27,7 +26,7 @@ app.get('/api', (req, res) => {
   res.json({ message: 'Hello from server!' });
 });
 
-if (config.env !== 'production') {
+if (config.env !== 'test') {
   app.use(morgan.successHandler);
 }
 app.use(realMorgan('dev'));
@@ -56,16 +55,13 @@ app.options('*', cors());
 app.use(passport.initialize());
 passport.use('jwt', jwtStrategy);
 
-
 // limit repeated failed requests to auth endpoints
 if (config.env === 'production') {
   app.use('/v1/auth', authLimiter);
-  app.use('/v2/auth', authLimiter);
 }
 
-//v1 and v2 routes for web and mobile
-app.use('/v1', routesv1);
-app.use('/v2', routesv2);
+// v1 api routes
+app.use('/v1', routes);
 
 // All other GET requests not handled before will return our React app
 // app.get('/*', (req, res) => {

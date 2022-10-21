@@ -605,11 +605,12 @@ const deleteProjectMember = catchAsync(async (req, res) => {
 
 const createWork = catchAsync(async (req, res) => {
   const { profileId } = req.params;
-  const { name, roles, time, timeRequired, quantity, quantityRequired, comment, commentRequired, photo, photoRequired } =
+  const { name, location, roles, time, timeRequired, quantity, quantityRequired, comment, commentRequired, photo, photoRequired } =
     req.body;
   const work = await projectService.createProfileWork(
     profileId,
     name,
+    location,
     roles,
     time,
     timeRequired,
@@ -760,20 +761,44 @@ const createLocation = catchAsync(async (req, res) => {
   res.status(200).json({ message: "Location created", data: myLocation })
 });
 
+const updateLocation = catchAsync(async (req, res) => {
+  const { locationId } = req.params;
+  const { name } = req.body;
+  const location = await projectService.isLocationExist(locationId);
+  location.name = name;
+  await location.save();
+  res.status(200).json({
+    message: "Location updated"
+  })
+});
+
+const deleteLocation = catchAsync(async (req, res) => {
+  const { locationId } = req.params;
+  const location = await projectService.isLocationExist(locationId);
+  await projectService.removeLocaitonChilds();
+  await projectService.removeLocationWorks();
+  await location.remove()
+  res.status(200).json({
+    message: "Location updated"
+  })
+});
+
 // get locations with external childs
-// get internal childs of a location
+// get internal childs of a location with works
 
 
 const getExternalLocations = catchAsync(async (req, res) => {
   const { timeProfileId } = req.params;
+  console.log('timeProfileId: ', timeProfileId);
   const locations = await projectService.getAllLocationsByTimeProfile(timeProfileId)
   res.status(200).json({ data: locations })
 });
 
 const getInternalLocations = catchAsync(async (req, res) => {
   const { timeProfileId, locationId } = req.params;
-  const locations = await projectService.getAllInternalLocations(timeProfileId)
-  res.status(200).json({ data: locations })
+  const locations = await projectService.getAllInternalLocations(timeProfileId, locationId)
+  const works = await projectService.getAllWorksByLocation(timeProfileId, locationId);
+  res.status(200).json({ data: { locations, works } })
 });
 
 
@@ -826,6 +851,8 @@ module.exports = {
   addRemoveFolderUser,
   createLocation,
   getExternalLocations,
-  getInternalLocations
+  getInternalLocations,
+  deleteLocation,
+  updateLocation
   // getProjectMembersWithOwners
 };

@@ -12,5 +12,5 @@ const otpTypes = {
 
 module.exports = {
   tokenTypes,
-  otpTypes
+  otpTypes,
 };

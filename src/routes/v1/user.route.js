@@ -10,7 +10,7 @@ router
   .route('/profile')
   .post(auth('manageProfile'), validate(userValidation.updateProfile), userController.updateMyProfile);
 router
-.route('/getprofile').post(auth('manageProfile'), userController.getMyProfile)
+  .route('/getprofile').post(auth('manageProfile'), userController.getMyProfile);
 
 router
   .route('/profile/pic')

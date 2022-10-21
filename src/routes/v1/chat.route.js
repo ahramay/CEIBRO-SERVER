@@ -46,7 +46,7 @@ router
   .route('/message/favourite/:messageId')
   .post(auth('getChatRooms'), chatController.addMessageToFavourite);
 
-router.route('/message/favourites/:messageId').post(auth('getChatRooms'), chatController.getPinnedMessages);
+router.route('/message/getfavourite/:messageId').post(auth('getChatRooms'), chatController.getPinnedMessages);
 
 router.route('/media/:roomId').get(auth('getChatRooms'), chatController.getPinnedMessages);
 
@@ -75,6 +75,7 @@ router
   .get(auth('getChatRooms'), chatController.getQuestioniarAnswersByUser);
 
 router.route('/message/questionair/:roomId').get(auth('getChatRooms'), chatController.getQuestionairByTypeMessage);
+router.route('/message/questionairsearch/:roomId').post(auth('getChatRooms'), chatController.getQuestioniarSearch);
 
 // router
 //   .route('/room/file-upload/:roomId')
@@ -848,7 +849,7 @@ module.exports = router;
  *       "404":
  *         $ref: '#/components/responses/NotFound'
  * @swagger
- * /chat/message/favourites/{messageId}:
+ * /chat/message/getfavourite/{messageId}:
  *   post:
  *     summary: get favourite messages of a room
  *     tags: [Chat]

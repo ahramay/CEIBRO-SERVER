@@ -105,6 +105,7 @@ const updateChat = catchAsync(async (req, res) => {
 
 const getConversationByRoomId = catchAsync(async (req, res) => {
   const currentLoggedUser = req.user._id;
+  console.log(req.params, req.query, req.query.limit)
   const { roomId } = req.params;
   const { lastMessageId = null, down = 'false', search, messageId = null,username,company,group, startDate,endDate } = req.query;
   const room = await chatService.getChatRoomByRoomId(roomId);
@@ -115,6 +116,7 @@ const getConversationByRoomId = catchAsync(async (req, res) => {
   let idsFilter = {
     chat: roomId,
   };
+
   let usersFilters = {};
   searchUsers = false;
   if(username){
@@ -201,9 +203,10 @@ const getConversationByRoomId = catchAsync(async (req, res) => {
   } else {
     const options = {
       page: parseInt(req.query.page) || 0,
-      limit: parseInt(req.query.limit) || 10,
+      limit: parseInt(req.query.limit) || 20,
       upPagination: down != 'true',
     };
+
 
     // zero index if start of paginatio || last message index if not start of pagination
     let index = messageIds.length > 0 ? messageIds.length : -1;
@@ -413,6 +416,19 @@ const addOrRemoveChatMembers = catchAsync(async (req, res) => {
   res.status(200).json({message:`Member ${result ? 'added' : 'removed'}`});
 });
 
+
+const leaveChatRoom = catchAsync(async (req, res) => {
+  const { roomId, memberId } = req.params;
+  const { temporary = false } = req.query;
+
+  if (String(memberId) == String(req.user._id)) {
+    throw new ApiError(400, 'Cannot remove yourself');
+  }
+
+  const result = await chatService.leaveChat(roomId, memberId, temporary);
+  res.status(200).json({message:`Member ${result ? '' : 'removed'}`});
+});
+
 const getAvailableChatMembers = catchAsync(async (req, res) => {
   const { roomId } = req.params;
   const result = await chatService.getAvailableChatMembers(roomId, req.user._id);
@@ -490,6 +506,37 @@ const saveQuestioniar = catchAsync(async (req, res) => {
   res.status(200).send(message);
 });
 
+const getQuestioniarSearch = catchAsync(async (req, res) => {
+  const search = pick(req.query, ['dueDate', 'questioniar']);
+  const options = pick(req.query, ['sortBy', 'limit', 'page']);
+  if (search.dueDate) {
+    filter.dueDate = {
+      $lte: search.dueDate,
+    };
+  }
+
+
+  if (search.questioniar) {
+    let userQuestioniarIds = await chatService.getChatQuestioniarId(search.questioniar);
+    filter._id = {
+      $in: userQuestioniarIds,
+    };
+  }
+  let questioniarId = await chatService.getChatQuestioniarId(req.user._id);
+  console.log('questioniarId: ', questioniarId);
+  filter = {
+    $and: [
+      filter,
+      {
+        _id: questioniarId,
+      },
+    ],
+  };
+
+  const result = await chatService.queryChats(filter, options);
+  res.json({ getQuestioniar: result });
+});
+
 const getQuestioniarById = catchAsync(async (req, res) => {
   const { questioniarId } = req.params;
   const { _id } = req.user;
@@ -529,10 +576,15 @@ const getQuestioniarById = catchAsync(async (req, res) => {
     });
 
     questioniar.questions = questioniar?.questions.map((question) => {
+      console.log("other user ans",questioniar);
       const myAnswer = answers.find(
         (answer) => String(answer.user) === String(answerUser) && String(answer.question) === String(question._id)
       );
+
       question._doc.answer = myAnswer.answer;
+
+
+
       if (question._doc.type === 'checkbox') {
         question._doc.answer = myAnswer.answer.split(',');
       }
@@ -540,6 +592,7 @@ const getQuestioniarById = catchAsync(async (req, res) => {
     });
     questioniar._doc.answeredByMe = true;
   }
+
   questioniar.questions = questioniar?.questions?.map((question) => {
     console.log('question: ', question);
     question._doc.options =
@@ -812,8 +865,10 @@ module.exports = {
   forwardMessage,
   getQuestionairByTypeMessage,
   getAvailableChatMembers,
+  getQuestioniarSearch,
   createOneToOneChat,
   updateChatPinTitle,
   updateChatProfilePic,
+  leaveChatRoom
   // uploadImage
 };

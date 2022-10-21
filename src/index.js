@@ -6,7 +6,7 @@ const config = require('./config/config');
 const logger = require('./config/logger');
 const { webSocket } = require('./controllers');
 
-// let server;
+let server;
 
 mongoose
   .connect(config.mongoose.url, config.mongoose.options)
@@ -16,7 +16,7 @@ mongoose
     const welcome = (p) => () =>
       l.info(`up and running in ${process.env.NODE_ENV || 'development'} @: ${os.hostname()} on port: ${p}}`);
 
-    const server = http.createServer(app);
+    server = http.createServer(app);
     const io = new Server(server, {
       cors: {
         origin: '*',

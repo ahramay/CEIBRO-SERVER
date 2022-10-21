@@ -14,17 +14,7 @@ class WebSocket {
             if (tokenVerify.isVerified) {
                 const { sub } = tokenVerify
                 userId = sub;
-
                 this.saveUsersSocket(tokenVerify.sub, socket, io);
-
-
-
-
-
-
-
-
-
 
                 // Send message to another user
 

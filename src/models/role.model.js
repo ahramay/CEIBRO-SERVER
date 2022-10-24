@@ -15,22 +15,23 @@ const roleSchema = mongoose.Schema(
         enum: rolesAccess
       }
     ],
-    admin: {
-      type: Boolean,
-      default: false
-    },
-    member: [
+    userRoles: {
+      admin: {
+        type: Boolean,
+        default: false
+      },
+      member:
       {
         type: String,
         enum: memberAccess
-      }
-    ],
-    timeProfile: [
-      {
-        type: String,
-        enum: timeProfileAccess
-      }
-    ],
+      },
+      timeProfile: [
+        {
+          type: String,
+          enum: timeProfileAccess
+        }
+      ],
+    },
     project: {
       type: mongoose.SchemaTypes.ObjectId, 
       ref: 'Project'

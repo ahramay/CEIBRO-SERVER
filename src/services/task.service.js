@@ -2,9 +2,7 @@ const httpStatus = require('http-status');
 const { Project, Task, SubTask } = require('../models');
 const ApiError = require('../utils/ApiError');
 
-const createTask = async (taskBody) => {
-  return Task.create(taskBody);
-};
+const createTask = async (taskBody) => Task.create(taskBody);
 
 const isTaskExist = async (taskId, populate = []) => {
   const task = await Task.findById(taskId).populate(populate);
@@ -32,7 +30,6 @@ const updateTaskById = async (taskId, updateBody) => {
 const deleteTaskById = async (taskId) => {
   const task = await isTaskExist(taskId);
   await task.remove();
-  return;
 };
 
 const createSubTask = async (taskId, subTaskBody, currentUserId) => {
@@ -41,14 +38,11 @@ const createSubTask = async (taskId, subTaskBody, currentUserId) => {
   return SubTask.create(subTaskBody);
 };
 
-const getSubTasksByFilters = (filter, populate = []) => {
-  return SubTask.find(filter).populate(populate);
-};
+const getSubTasksByFilters = (filter, populate = []) => SubTask.find(filter).populate(populate);
 
 const deleteSubTaskById = async (subTaskId) => {
   const subTask = await isSubTaskExist(subTaskId);
   await subTask.remove();
-  return;
 };
 
 const updateSubTaskById = async (subTaskId, updateBody) => {

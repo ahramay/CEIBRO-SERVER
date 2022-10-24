@@ -10,32 +10,30 @@ const folders = {
 
 const s3bucket = new AWS.S3(awsConfig);
 
-const uploadFile = (file, folder = folders.CHAT_FOLDER) => {
-  return new Promise((resolve, reject) => {
-    try {
-      const params = {
-        Key: file.originalname,
-        Body: file.buffer,
-        Bucket: `ceibro/${folder}`,
-        ACL: 'public-read-write',
-      };
-      s3bucket.upload(params, (error, data) => {
-        if (error) {
-          console.log("one", error)
-          reject(error);
-        }
-        resolve({
-          url: data.Location,
-          fileType: getFileTypeByName(file.originalname),
-          fileName: file.originalname,
-        });
+const uploadFile = (file, folder = folders.CHAT_FOLDER) => new Promise((resolve, reject) => {
+  try {
+    const params = {
+      Key: file.originalname,
+      Body: file.buffer,
+      Bucket: `ceibro/${folder}`,
+      ACL: 'public-read-write',
+    };
+    s3bucket.upload(params, (error, data) => {
+      if (error) {
+        console.log('one', error);
+        reject(error);
+      }
+      resolve({
+        url: data.Location,
+        fileType: getFileTypeByName(file.originalname),
+        fileName: file.originalname,
       });
-    } catch (e) {
-      console.log("two", e)
-      reject(e);
-    }
-  });
-};
+    });
+  } catch (e) {
+    console.log('two', e);
+    reject(e);
+  }
+});
 
 module.exports = {
   uploadFile,

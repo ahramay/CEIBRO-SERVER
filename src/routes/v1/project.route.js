@@ -1645,7 +1645,6 @@ module.exports = router;
  *         $ref: '#/components/responses/NotFound'
  */
 
-
 /**
  * @swagger
  * /project/location/{timeProfileId}:
@@ -1753,7 +1752,6 @@ module.exports = router;
  *       "404":
  *         $ref: '#/components/responses/NotFound'
  */
-
 
 /**
  * @swagger

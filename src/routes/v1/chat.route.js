@@ -6,6 +6,7 @@ const auth = require('../../middlewares/auth');
 const { chatController } = require('../../controllers');
 const { chatValidation } = require('../../validations');
 const { multerUpload } = require('../../config/aws.config');
+
 const router = express.Router();
 
 router

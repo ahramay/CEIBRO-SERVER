@@ -202,6 +202,11 @@ const createProjectRole = async (name, admin, roles = [], member, timeProfile, p
     member,
     timeProfile,
     project: projectId,
+    permissions: {
+      admin: {roles: {create: true, update: false,delete: false},timeProfile: {create: true, update: false,delete: false},members: {create: true, update: false,delete: false}, },
+      subContractor: {roles: {create: true, update: false,delete: false},timeProfile: {create: true, update: false,delete: false},members: {create: true, update: false,delete: false}, },
+      individual: {roles: {create: true, update: false,delete: false},timeProfile: {create: true, update: false,delete: false},members: {create: true, update: false,delete: false}, },
+    }
   });
   await newRole.save();
 
@@ -719,9 +724,16 @@ const isMemberExistInProject = (userId, projectId) => {
     project: projectId,
   });
 };
-
+const findMemberByProjectId = (userId, projectId) => {
+  return ProjectMember.findOne({
+    user: userId,
+    project: projectId,
+  });
+}
 const getProjectPermissions = async (userId, projectId) => {
   console.log('projectId: ', projectId);
+  // checking if user exist in owners
+  const project = await getProjectById(projectId);
   const members = await isMemberExistInProject(userId, projectId);
   const roleIds = members.map((member) => member.role);
   const roles = await Role.find({
@@ -731,6 +743,13 @@ const getProjectPermissions = async (userId, projectId) => {
   let memberPermissions = [];
   let timeProfilePermissions = [];
   let admin = false;
+  if (project?.owner?.findIndex((owner) => String(owner._id) === String(userId)) > -1) {
+    admin = true;
+    return {admin: true}
+  }
+  const member = findMemberByProjectId(userId,projectId);
+  const role = await Role.findById(member.role);
+  return role
   roles.forEach((role) => {
     if (role.admin && !admin) {
       admin = true;
@@ -746,9 +765,6 @@ const getProjectPermissions = async (userId, projectId) => {
   memberPermissions = [...new Set(memberPermissions)];
   rolePermissions = [...new Set(rolePermissions)];
   timeProfilePermissions = [...new Set(timeProfilePermissions)];
-
-  // checking if user exist in owners
-  const project = await getProjectById(projectId);
 
   if (project?.owner?.findIndex((owner) => String(owner._id) === String(userId)) > -1) {
     admin = true;

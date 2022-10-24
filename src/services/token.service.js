@@ -1,13 +1,13 @@
 const jwt = require('jsonwebtoken');
 const moment = require('moment');
 const httpStatus = require('http-status');
+const otpGenerator = require('otp-generator');
 const config = require('../config/config');
 const userService = require('./user.service');
 const { Token } = require('../models');
 const ApiError = require('../utils/ApiError');
 const { tokenTypes, otpTypes } = require('../config/tokens');
 const Otp = require('../models/otp.model');
-const otpGenerator = require('otp-generator');
 const User = require('../models/user.model');
 
 /**
@@ -28,9 +28,7 @@ const generateToken = (userId, expires, type, secret = config.jwt.secret) => {
   return jwt.sign(payload, secret);
 };
 
-const generateOtp = () => {
-  return otpGenerator.generate(6, { digits: true });
-};
+const generateOtp = () => otpGenerator.generate(6, { digits: true });
 
 /**
  * Save a token
@@ -79,7 +77,9 @@ const saveOtp = async (otp, userId, expires, type) => {
  */
 const verifyToken = async (token, type) => {
   const payload = jwt.verify(token, config.jwt.secret);
-  const tokenDoc = await Token.findOne({ token, type, user: payload.sub, blacklisted: false });
+  const tokenDoc = await Token.findOne({
+    token, type, user: payload.sub, blacklisted: false,
+  });
   if (!tokenDoc) {
     throw new Error('Token not found');
   }

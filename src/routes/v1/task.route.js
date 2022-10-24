@@ -37,7 +37,7 @@ router
     auth('manageProject'),
     validateSubTaskAction,
     validate(validation.subTaskAcceptAction),
-    taskController.subTaskAcceptAction
+    taskController.subTaskAcceptAction,
   );
 
 router
@@ -46,7 +46,7 @@ router
     auth('manageProject'),
     validateSubTaskAction,
     validate(validation.subTaskCompleteAction),
-    taskController.subTaskCompleteAction
+    taskController.subTaskCompleteAction,
   );
 
 module.exports = router;

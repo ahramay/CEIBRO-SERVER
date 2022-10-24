@@ -46,7 +46,7 @@ const paginate = (schema) => {
           populateOption
             .split('.')
             .reverse()
-            .reduce((a, b) => ({ path: b, populate: a }))
+            .reduce((a, b) => ({ path: b, populate: a })),
         );
       });
     }

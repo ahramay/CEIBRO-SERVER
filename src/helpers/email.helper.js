@@ -1,5 +1,4 @@
-const getResetPasswordTemplate = (resetPasswordUrl) => {
-  return `
+const getResetPasswordTemplate = (resetPasswordUrl) => `
 
       <!doctype html>
       <html lang="en-US">
@@ -83,10 +82,8 @@ const getResetPasswordTemplate = (resetPasswordUrl) => {
       </html>
 
       `;
-};
 
-const getInviationEmailTemplate = (url, fromName, fromEmail) => {
-  return `
+const getInviationEmailTemplate = (url, fromName, fromEmail) => `
 
         <!doctype html>
         <html lang="en-US">
@@ -166,10 +163,8 @@ const getInviationEmailTemplate = (url, fromName, fromEmail) => {
         </html>
 
         `;
-};
 
-const getVerifyEmailTemplate = (verificationEmailUrl) => {
-  return `
+const getVerifyEmailTemplate = (verificationEmailUrl) => `
               <!doctype html>
               <html lang="en-US">
 
@@ -248,10 +243,8 @@ const getVerifyEmailTemplate = (verificationEmailUrl) => {
               </html>
 
           `;
-};
 
-const getAccountLockTemplate = (username) => {
-  return `
+const getAccountLockTemplate = (username) => `
         <!doctype html>
         <html lang="en-US">
 
@@ -328,7 +321,6 @@ const getAccountLockTemplate = (username) => {
         </html>
 
     `;
-};
 
 module.exports = {
   getVerifyEmailTemplate,

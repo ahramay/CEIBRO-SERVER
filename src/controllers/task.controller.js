@@ -1,10 +1,10 @@
 const httpStatus = require('http-status');
+const moment = require('moment');
+const { BAD_REQUEST } = require('http-status');
 const pick = require('../utils/pick');
 const ApiError = require('../utils/ApiError');
 const catchAsync = require('../utils/catchAsync');
 const { taskService, projectService } = require('../services');
-const moment = require('moment');
-const { BAD_REQUEST } = require('http-status');
 const { escapeRegex } = require('../helpers/query.helper');
 
 const populate = [
@@ -35,7 +35,7 @@ const subTaskPopulate = [
 
 const createTask = catchAsync(async (req, res) => {
   const { projectId } = req.params;
-  const body = req.body;
+  const { body } = req;
   await projectService.getProjectById(projectId);
   body.project = projectId;
   body.creator = req.user._id;
@@ -87,7 +87,7 @@ const deleteTask = catchAsync(async (req, res) => {
 });
 
 const createSubTask = catchAsync(async (req, res) => {
-  const body = Object.assign({}, req.body);
+  const body = { ...req.body };
   const { customNudgeTime = null, nudgeBeforeDays = null } = body;
   if (customNudgeTime) {
     if (!moment(customNudgeTime).isValid()) {
@@ -95,7 +95,7 @@ const createSubTask = catchAsync(async (req, res) => {
     }
   }
   if (customNudgeTime && nudgeBeforeDays) {
-    delete body['nudgeBeforeDays'];
+    delete body.nudgeBeforeDays;
   }
   if (nudgeBeforeDays && isNaN(nudgeBeforeDays)) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid nudge before days value');
@@ -122,7 +122,7 @@ const deleteSubTask = catchAsync(async (req, res) => {
 });
 
 const updateSubTask = catchAsync(async (req, res) => {
-  const body = Object.assign({}, req.body);
+  const body = { ...req.body };
   await taskService.updateSubTaskById(req.params.subTaskId, body);
   const subTask = await taskService.isSubTaskExist(req.params.subTaskId, subTaskPopulate);
   res.send(subTask);
@@ -136,7 +136,7 @@ const subTaskAcceptAction = catchAsync(async (req, res) => {
     throw new ApiError(httpStatus.BAD_REQUEST, `Task already ${subTask.isAccepted ? 'accepted' : 'rejected'}`);
   }
   if (subTask.completeAction) {
-    throw new ApiError(httpStatus.BAD_REQUEST, `Task already completed`);
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Task already completed');
   }
   subTask.isAccepted = isAccepted;
   subTask.acceptAction = true;
@@ -149,13 +149,13 @@ const subTaskCompleteAction = catchAsync(async (req, res) => {
   const { subTaskId } = req.params;
   const subTask = await taskService.isSubTaskExist(subTaskId);
   if (!subTask.acceptAction) {
-    throw new ApiError(httpStatus.BAD_REQUEST, `Accept action not performed`);
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Accept action not performed');
   }
   if (!subTask.isAccepted) {
-    throw new ApiError(httpStatus.BAD_REQUEST, `Task was rejected`);
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Task was rejected');
   }
   if (subTask.completeAction) {
-    throw new ApiError(httpStatus.BAD_REQUEST, `Task already completed`);
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Task already completed');
   }
   if (subTask.commentRequired && !comments) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Comments required');
@@ -165,7 +165,7 @@ const subTaskCompleteAction = catchAsync(async (req, res) => {
   subTask.completeComments = comments;
 
   await subTask.save();
-  res.status(200).send(`Task completed`);
+  res.status(200).send('Task completed');
 });
 
 module.exports = {

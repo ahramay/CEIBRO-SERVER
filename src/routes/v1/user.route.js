@@ -4,6 +4,7 @@ const validate = require('../../middlewares/validate');
 const userValidation = require('../../validations/user.validation');
 const userController = require('../../controllers/user.controller');
 const { multerUpload } = require('../../config/aws.config');
+
 const router = express.Router();
 
 router

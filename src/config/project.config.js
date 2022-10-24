@@ -13,7 +13,6 @@ const avaialablePermissions = {
   create_permission: 'create',
   edit_permission: 'edit',
   delete_permission: 'delete',
-  self_made_permission: 'self-made',
 };
 
 const roleEntities = {

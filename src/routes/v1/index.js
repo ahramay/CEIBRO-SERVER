@@ -42,6 +42,4 @@ defaultRoutes.forEach((routex) => {
   router.use(routex.path, routex.route);
 });
 
-
-
 module.exports = router;

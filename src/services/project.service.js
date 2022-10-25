@@ -184,7 +184,7 @@ const getFolderByProjectAndName = (name, projectId) => {
     project: projectId,
   });
 };
-const createProjectRole = async (name, admin, roles = [], member, timeProfile, projectId, members) => {
+const createProjectRole = async (name, permissions, projectId) => {
   const project = await getProjectById(projectId);
   if (!project) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Project not found');
@@ -197,32 +197,24 @@ const createProjectRole = async (name, admin, roles = [], member, timeProfile, p
 
   const newRole = new Role({
     name,
-    admin,
-    roles,
-    member,
-    timeProfile,
     project: projectId,
-    permissions: {
-      admin: {roles: {create: true, update: false,delete: false},timeProfile: {create: true, update: false,delete: false},members: {create: true, update: false,delete: false}, },
-      subContractor: {roles: {create: true, update: false,delete: false},timeProfile: {create: true, update: false,delete: false},members: {create: true, update: false,delete: false}, },
-      individual: {roles: {create: true, update: false,delete: false},timeProfile: {create: true, update: false,delete: false},members: {create: true, update: false,delete: false}, },
-    }
+    permissions
   });
   await newRole.save();
 
-  if (members) {
-    const users = await User.find({
-      _id: members,
-    });
-    const membersToCreate = users.map((user) => ({
-      user: user._id,
-      role: newRole._id,
-      project: projectId,
-    }));
-    ProjectMember.insertMany(membersToCreate).then((user) => {
-      console.log('created members are', user);
-    });
-  }
+  // if (members) {
+  //   const users = await User.find({
+  //     _id: members,
+  //   });
+  //   const membersToCreate = users.map((user) => ({
+  //     user: user._id,
+  //     role: newRole._id,
+  //     project: projectId,
+  //   }));
+  //   ProjectMember.insertMany(membersToCreate).then((user) => {
+  //     console.log('created members are', user);
+  //   });
+  // }
   return newRole.save();
 };
 
@@ -739,9 +731,9 @@ const getProjectPermissions = async (userId, projectId) => {
   const roles = await Role.find({
     _id: roleIds,
   });
-  let rolePermissions = [];
-  let memberPermissions = [];
-  let timeProfilePermissions = [];
+  // let rolePermissions = [];
+  // let memberPermissions = [];
+  // let timeProfilePermissions = [];
   let admin = false;
   if (project?.owner?.findIndex((owner) => String(owner._id) === String(userId)) > -1) {
     admin = true;
@@ -750,26 +742,26 @@ const getProjectPermissions = async (userId, projectId) => {
   const member = findMemberByProjectId(userId,projectId);
   const role = await Role.findById(member.role);
   return role
-  roles.forEach((role) => {
-    if (role.admin && !admin) {
-      admin = true;
-    }
+  // roles.forEach((role) => {
+  //   if (role.admin && !admin) {
+  //     admin = true;
+  //   }
 
-    if (role.roles && Array.isArray(role.roles)) rolePermissions = [...rolePermissions, ...role.roles];
+  //   if (role.roles && Array.isArray(role.roles)) rolePermissions = [...rolePermissions, ...role.roles];
 
-    if (role.timeProfile && Array.isArray(role.timeProfile))
-      timeProfilePermissions = [...timeProfilePermissions, ...role.timeProfile];
+  //   if (role.timeProfile && Array.isArray(role.timeProfile))
+  //     timeProfilePermissions = [...timeProfilePermissions, ...role.timeProfile];
 
-    if (role.member && Array.isArray(role.member)) memberPermissions = [...memberPermissions, ...role.member];
-  });
-  memberPermissions = [...new Set(memberPermissions)];
-  rolePermissions = [...new Set(rolePermissions)];
-  timeProfilePermissions = [...new Set(timeProfilePermissions)];
+  //   if (role.member && Array.isArray(role.member)) memberPermissions = [...memberPermissions, ...role.member];
+  // });
+  // memberPermissions = [...new Set(memberPermissions)];
+  // rolePermissions = [...new Set(rolePermissions)];
+  // timeProfilePermissions = [...new Set(timeProfilePermissions)];
 
-  if (project?.owner?.findIndex((owner) => String(owner._id) === String(userId)) > -1) {
-    admin = true;
-  }
-  return { member: memberPermissions, timeProfile: timeProfilePermissions, roles: rolePermissions, admin };
+  // if (project?.owner?.findIndex((owner) => String(owner._id) === String(userId)) > -1) {
+  //   admin = true;
+  // }
+  // return { member: memberPermissions, timeProfile: timeProfilePermissions, roles: rolePermissions, admin };
 };
 
 const getUserProjectIds = async (userId) => {

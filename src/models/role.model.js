@@ -9,12 +9,6 @@ const roleSchema = mongoose.Schema(
       required: true,
       trim: true,
     },
-    roles: [
-      {
-        type: String,
-        enum: rolesAccess,
-      },
-    ],
 
     admin: {type:Boolean,default: false},
 
@@ -22,46 +16,46 @@ const roleSchema = mongoose.Schema(
       admin: {
         roles: {
           create: {type: Boolean, default: false},
-          update: {type: Boolean, default: false},
+          edit: {type: Boolean, default: false},
           delete: {type: Boolean, default: false},
         },
-        members: {
+        member: {
           create: {type: Boolean, default: false},
-          update: {type: Boolean, default: false},
+          edit: {type: Boolean, default: false},
           delete: {type: Boolean, default: false},
         },
         timeProfile: {
           create: {type: Boolean, default: false},
-          update: {type: Boolean, default: false},
+          edit: {type: Boolean, default: false},
           delete: {type: Boolean, default: false},
         },
       },
       subContractor: {
-        members: {
+        member: {
           create: {type: Boolean, default: false},
-          update: {type: Boolean, default: false},
+          edit: {type: Boolean, default: false},
           delete: {type: Boolean, default: false},
         },
         timeProfile: {
           create: {type: Boolean, default: false},
-          update: {type: Boolean, default: false},
+          edit: {type: Boolean, default: false},
           delete: {type: Boolean, default: false},
         },
       },
       individual: {
         roles: {
           create: {type: Boolean, default: false},
-          update: {type: Boolean, default: false},
+          edit: {type: Boolean, default: false},
           delete: {type: Boolean, default: false},
         },
-        members: {
+        member: {
           create: {type: Boolean, default: false},
-          update: {type: Boolean, default: false},
+          edit: {type: Boolean, default: false},
           delete: {type: Boolean, default: false},
         },
         timeProfile: {
           create: {type: Boolean, default: false},
-          update: {type: Boolean, default: false},
+          edit: {type: Boolean, default: false},
           delete: {type: Boolean, default: false},
         },
       },

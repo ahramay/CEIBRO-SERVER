@@ -169,8 +169,8 @@ const deleteProject = catchAsync(async (req, res) => {
 
 const createRole = catchAsync(async (req, res) => {
   const { projectId } = req.params;
-  const { name, admin, memberIds, roles, member, timeProfile } = req.body;
-  const role = await createProjectRole(name, admin, roles, member, timeProfile, projectId, memberIds);
+  const { name, permissions } = req.body;
+  const role = await createProjectRole(name, permissions, projectId);
   res.status(200).send(role);
 });
 

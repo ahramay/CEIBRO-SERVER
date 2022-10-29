@@ -148,10 +148,10 @@ userSchema.statics.isEmailTaken = async function (email, excludeUserId) {
  * @param {string} username - The user's username
  * @returns {Promise<boolean>}
  */
-// userSchema.statics.isUsernameTaken = async function (username) {
-//   const user = await this.findOne({ username });
-//   return !!user;
-// };
+userSchema.statics.isUsernameTaken = async function (username) {
+  const user = await this.findOne({ username });
+  return !!user;
+};
 
 userSchema.statics.createDefultProject = async function (userId) {
   // creating default role

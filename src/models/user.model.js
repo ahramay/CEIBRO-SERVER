@@ -20,7 +20,6 @@ const userSchema = mongoose.Schema(
     username: {
       type: String,
       trim: true,
-      required: false,
     },
     profilePic: {
       type: String,
@@ -53,6 +52,7 @@ const userSchema = mongoose.Schema(
     },
     phone: {
       type: String,
+      trim: true,
     },
     password: {
       type: String,
@@ -156,7 +156,7 @@ userSchema.statics.isUsernameTaken = async function (username) {
 userSchema.statics.createDefultProject = async function (userId) {
   // creating default role
   const defaultProject = await Project.create({
-    title: 'Default Project',
+    title: 'My Ceibro',
     status: 'draft',
     owner: [userId],
     isDefault: true,

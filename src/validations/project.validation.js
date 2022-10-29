@@ -41,54 +41,55 @@ const createProjectRole = {
   }),
   body: Joi.object().keys({
     name: Joi.string().required(),
+    admin: Joi.boolean().required(),
     permissions: Joi.object().keys({
       admin: Joi.object().keys({
-        roles:Joi.object().keys({
+        roles: Joi.object().keys({
           create: Joi.boolean(),
           edit: Joi.boolean(),
           delete: Joi.boolean(),
         }),
-        timeProfile:Joi.object().keys({
+        timeProfile: Joi.object().keys({
           create: Joi.boolean(),
           edit: Joi.boolean(),
           delete: Joi.boolean(),
-        }), 
-        member:Joi.object().keys({
+        }),
+        member: Joi.object().keys({
           create: Joi.boolean(),
           edit: Joi.boolean(),
           delete: Joi.boolean(),
         }),
       }),
       subContractor: Joi.object().keys({
-        timeProfile:Joi.object().keys({
+        timeProfile: Joi.object().keys({
           create: Joi.boolean(),
           edit: Joi.boolean(),
           delete: Joi.boolean(),
-        }), 
-        member:Joi.object().keys({
+        }),
+        member: Joi.object().keys({
           create: Joi.boolean(),
           edit: Joi.boolean(),
           delete: Joi.boolean(),
         }),
       }),
       individual: Joi.object().keys({
-        roles:Joi.object().keys({
+        roles: Joi.object().keys({
           create: Joi.boolean(),
           edit: Joi.boolean(),
           delete: Joi.boolean(),
         }),
-        timeProfile:Joi.object().keys({
+        timeProfile: Joi.object().keys({
           create: Joi.boolean(),
           edit: Joi.boolean(),
           delete: Joi.boolean(),
         }),
-        member:Joi.object().keys({
+        member: Joi.object().keys({
           create: Joi.boolean(),
           edit: Joi.boolean(),
           delete: Joi.boolean(),
         }),
       }),
-    })
+    }),
   }),
 };
 

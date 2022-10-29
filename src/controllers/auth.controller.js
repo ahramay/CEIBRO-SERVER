@@ -1,8 +1,6 @@
 const httpStatus = require('http-status');
 const catchAsync = require('../utils/catchAsync');
-const {
-  authService, userService, tokenService, emailService,
-} = require('../services');
+const { authService, userService, tokenService, emailService } = require('../services');
 const Product = require('../models/project.model');
 const ApiError = require('../utils/ApiError');
 
@@ -45,6 +43,7 @@ const resetPassword = catchAsync(async (req, res) => {
 
 const sendVerificationEmail = catchAsync(async (req, res) => {
   const { email } = req.body;
+
   const user = await userService.getUserByEmail(email);
   if (!user) {
     throw new ApiError(httpStatus.UNAUTHORIZED, 'Email not registered');

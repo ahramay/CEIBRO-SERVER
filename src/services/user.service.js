@@ -1,10 +1,10 @@
 const httpStatus = require('http-status');
-const { BAD_REQUEST } = require('http-status');
 const emailService = require('./email.service');
 const { User, EmailInvite } = require('../models');
 const ApiError = require('../utils/ApiError');
 const Invite = require('../models/invite.model');
 const { invitesStatus } = require('../config/user.config');
+const { BAD_REQUEST } = require('http-status');
 
 /**
  * Create a user
@@ -14,10 +14,6 @@ const { invitesStatus } = require('../config/user.config');
 const createUser = async (userBody) => {
   if (await User.isEmailTaken(userBody.email)) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
-  }
-
-  if (await User.isUsernameTaken(userBody.username)) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Username already taken');
   }
 
   return User.create(userBody);
@@ -42,23 +38,25 @@ const queryUsers = async (filter, options) => {
  * @param {ObjectId} id
  * @returns {Promise<User>}
  */
-const getUserById = async (id) => User.findById(id);
+const getUserById = async (id) => {
+  return User.findById(id);
+};
 
 /**
  * Get user by email
  * @param {string} email
  * @returns {Promise<User>}
  */
-const getUserByEmail = async (email) => User.findOne({
-  $or: [
+const getUserByEmail = async (email) => {
+  return User.findOne({ $or: [
     {
-      email,
+      email
     },
     {
-      username: email,
-    },
-  ],
-});
+      username: email
+    }
+  ] });
+};
 
 /**
  * Update user by id
@@ -93,10 +91,12 @@ const deleteUserById = async (userId) => {
   return user;
 };
 
-const getInvitation = async (from, to) => Invite.findOne({
-  from,
-  to,
-});
+const getInvitation = async (from, to) => {
+  return Invite.findOne({
+    from,
+    to,
+  });
+};
 
 /**
  * Invite user by email
@@ -113,10 +113,10 @@ const inviteUserByEmail = async (email, currentUserId) => {
 
   if (!user) {
     // if email not exists in users then sent him an email invite
-    const name = `${currentUser.firstName} ${currentUser.surName}`;
+    const name = currentUser.firstName + ' ' + currentUser.surName;
     const emailInvite = new EmailInvite({
       from: currentUserId,
-      email,
+      email: email,
     });
     await emailInvite.save();
     await emailService.sendInvitationEmail(email, name, currentUser.email);
@@ -137,60 +137,75 @@ const inviteUserByEmail = async (email, currentUserId) => {
       await inviteExist.save();
     }
   }
+  return;
 };
 
-const getInvitesByUserId = async (currentUserId) => Invite.find({
-  to: currentUserId,
-  status: invitesStatus.PENDING,
-}).populate('to from');
-
-const getInvitesCountByUserId = async (currentUserId) => Invite.count({
-  to: currentUserId,
-  status: invitesStatus.PENDING,
-});
-
-const getInviteById = async (inviteId) => Invite.findOne({
-  _id: inviteId,
-});
-
-const getPendingInvitesByUserId = async (inviteId) => Invite.find({
-  _id: inviteId,
-  status: invitesStatus.PENDING,
-});
-
-const acceptAllInvitations = async (currentUserId) => Invite.updateMany(
-  {
+const getInvitesByUserId = async (currentUserId) => {
+  return Invite.find({
     to: currentUserId,
     status: invitesStatus.PENDING,
-  },
-  {
-    status: invitesStatus.ACCEPTED,
-  },
-);
+  }).populate('to from');
+};
 
-const rejectAllInvitations = async (currentUserId) => Invite.updateMany(
-  {
+const getInvitesCountByUserId = async (currentUserId) => {
+  return Invite.count({
     to: currentUserId,
     status: invitesStatus.PENDING,
-  },
-  {
-    status: invitesStatus.REJECTED,
-  },
-);
+  });
+};
 
-const getConnectionsByUserId = async (currentUserId) => Invite.find({
-  $or: [
+const getInviteById = async (inviteId) => {
+  return Invite.findOne({
+    _id: inviteId,
+  });
+};
+
+const getPendingInvitesByUserId = async (inviteId) => {
+  return Invite.find({
+    _id: inviteId,
+    status: invitesStatus.PENDING,
+  });
+};
+
+const acceptAllInvitations = async (currentUserId) => {
+  return Invite.updateMany(
     {
       to: currentUserId,
+      status: invitesStatus.PENDING,
     },
     {
-      from: currentUserId,
+      status: invitesStatus.ACCEPTED,
+    }
+  );
+};
+
+const rejectAllInvitations = async (currentUserId) => {
+  return Invite.updateMany(
+    {
+      to: currentUserId,
+      status: invitesStatus.PENDING,
     },
-  ],
-  status: {
-    $in: [invitesStatus.ACCEPTED, invitesStatus.PENDING],
-  },
-}).populate('to from');
+    {
+      status: invitesStatus.REJECTED,
+    }
+  );
+};
+
+const getConnectionsByUserId = async (currentUserId) => {
+  return Invite.find({
+    $or: [
+      {
+        to: currentUserId,
+      },
+      {
+        from: currentUserId,
+      },
+    ],
+    status: {
+      $in: [invitesStatus.ACCEPTED, invitesStatus.PENDING],
+    },
+  }).populate('to from');
+};
 
 const deleteMyConnection = async (connectionId, currentUserId) => {
   const connection = await Invite.findOne({
@@ -221,38 +236,42 @@ const deleteEmailInvite = async (inviteId, currentUserId) => {
   return emailInvite.remove();
 };
 
-const getConnectionsCountByUserId = async (currentUserId) => Invite.count({
-  $or: [
-    {
-      to: currentUserId,
-    },
-    {
-      from: currentUserId,
-    },
-  ],
-  status: invitesStatus.ACCEPTED,
-});
+const getConnectionsCountByUserId = async (currentUserId) => {
+  return Invite.count({
+    $or: [
+      {
+        to: currentUserId,
+      },
+      {
+        from: currentUserId,
+      },
+    ],
+    status: invitesStatus.ACCEPTED,
+  });
+};
 
-const getAvailableUsers = async (currentUserId) => Invite.find({
-  $or: [
+const getAvailableUsers = async (currentUserId) => {
+  return Invite.find({
+    $or: [
+      {
+        to: currentUserId,
+      },
+      {
+        from: currentUserId,
+      },
+    ],
+    status: invitesStatus.ACCEPTED,
+  }).populate([
     {
-      to: currentUserId,
+      path: 'to',
+      select: 'firstName surName',
     },
     {
-      from: currentUserId,
+      path: 'from',
+      select: 'firstName surName',
     },
-  ],
-  status: invitesStatus.ACCEPTED,
-}).populate([
-  {
-    path: 'to',
-    select: 'firstName surName',
-  },
-  {
-    path: 'from',
-    select: 'firstName surName',
-  },
-]);
+  ]);
+};
 
 const isUserExist = async (userId) => {
   const user = await User.findById(userId);

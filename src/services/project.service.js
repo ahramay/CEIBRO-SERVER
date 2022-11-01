@@ -184,7 +184,7 @@ const getFolderByProjectAndName = (name, projectId) => {
     project: projectId,
   });
 };
-const createProjectRole = async (name, permissions,admin, projectId) => {
+const createProjectRole = async (name, permissions, projectId) => {
   const project = await getProjectById(projectId);
   if (!project) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Project not found');
@@ -736,21 +736,12 @@ const getProjectPermissions = async (userId, projectId) => {
   // let memberPermissions = [];
   // let timeProfilePermissions = [];
   let admin = false;
-
   if (project?.owner?.findIndex((owner) => String(owner._id) === String(userId)) > -1) {
     admin = true;
-    console.log("projectadmin", admin)
     return {admin: true}
   }
-
-  const member = await findMemberByProjectId(userId, projectId);
-  const role = await Role.findById(member?.role);
-  console.log(project)
-  console.log(member)
-  console.log(role)
-  console.log(userId)
-  console.log(projectId)
-  
+  const member = findMemberByProjectId(userId,projectId);
+  const role = await Role.findById(member.role);
   return role
   // roles.forEach((role) => {
   //   if (role.admin && !admin) {

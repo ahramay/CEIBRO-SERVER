@@ -171,12 +171,10 @@ const createRole = catchAsync(async (req, res) => {
   const { projectId } = req.params;
   const { name, permissions,admin } = req.body;
   const project = await getProjectById(projectId)
-  console.log(req.user)
-  console.log(project)
-  if (admin === true && project?.owner?.findIndex((owner) => String(owner._id) === String(req.user?._id)) === -1){
-   return res.status(403).json({message:"you cannot create an admin role"})
+  if (admin === true && project.owner !== req.user._id){
+    res.status(403).json({message:"you cannot create an admin role"})
   }
-  const role = await createProjectRole(name, permissions,admin, projectId);
+  const role = await createProjectRole(name,admin, permissions, projectId);
   res.status(200).send(role);
 });
 

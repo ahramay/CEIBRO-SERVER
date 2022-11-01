@@ -10,7 +10,7 @@ const validateCreateRole = catchAsync(async (req, res, next) => {
   const { _id } = req.user;
   const permissions = await projectService.getProjectPermissions(_id, projectId);
   console.log('permissions: ', permissions);
-  if (permissions?.admin || permissions?.permissions?.admin?.role?.create) {
+  if (permissions.admin || permissions?.roles?.includes?.(avaialablePermissions.create_permission)) {
     next();
   } else {
     throw new ApiError(httpStatus.BAD_REQUEST, 'create role not allowed');
@@ -22,7 +22,7 @@ const validateUpdateRole = catchAsync(async (req, res, next) => {
   const role = await getRoleById(roleId);
   const { _id } = req.user;
   const permissions = await projectService.getProjectPermissions(_id, role?.project);
-  if (permissions?.admin || permissions?.permissions?.admin?.role?.edit) {
+  if (permissions.admin || permissions?.roles?.includes?.(avaialablePermissions.edit_permission)) {
     next();
   } else {
     throw new ApiError(httpStatus.BAD_REQUEST, 'edit role not allowed');
@@ -34,7 +34,7 @@ const validateDeleteRole = catchAsync(async (req, res, next) => {
   const role = await getRoleById(roleId);
   const { _id } = req.user;
   const permissions = await projectService.getProjectPermissions(_id, role?.project);
-  if (permissions?.admin || permissions?.permissions?.admin?.role?.delete) {
+  if (permissions.admin || permissions?.roles?.includes?.(avaialablePermissions.delete_permission)) {
     next();
   } else {
     throw new ApiError(httpStatus.BAD_REQUEST, 'delete role not allowed');
